@@ -8,15 +8,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: 'Checkout Github Action'
+        uses: actions/checkout@v3
 
-      - name: Set Build Tag
+      - name: 'Login to GitHub Container Registry'
+        use: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: 'Set Build Tag'
         run: echo "BUILD_TAG=$(date +'%Y%m%d-%H%M')" >> "$GITHUB_ENV"
 
-      - name: Build API Server
+      - name: 'Build API Server Container'
         run: |
-          docker build -t "api-server" \
+          docker build -t "ghcr.io/${{secrets.GH_USER}}/api-server" \
                        -f pipeline/Dockerfile .
 
-      - name: List
-        run: docker images
+      - name: 'Push API Server Container'
+        run: docker push "ghcr.io/${{secrets.GH_USER}}/api-server"
