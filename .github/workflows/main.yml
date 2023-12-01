@@ -5,6 +5,7 @@ on:
 
 jobs:
   build-api-server:
+    permissions: write-all
     runs-on: ubuntu-latest
 
     steps:
