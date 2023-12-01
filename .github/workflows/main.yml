@@ -1,0 +1,22 @@
+name: Build and Deploy to VM
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-api-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set Build Tag
+        run: echo "BUILD_TAG=$(date + '%Y%m%d_%H%M')" >> "$GITHUB_ENV"
+
+      - name: Build API Server
+        run: |
+          docker build -t "apiServer_${{ env.BUILD_TAG }}"
+                       -f pipeline/Dockerfile .
+
+      - name: List
+        run: docker images
