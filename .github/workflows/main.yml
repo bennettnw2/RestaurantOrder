@@ -28,7 +28,7 @@ jobs:
         run: docker push "ghcr.io/${{secrets.GH_USER}}/api-server"
 
   deploy-api-server:
-    needs: build-api-server
+    # needs: build-api-server
     runs-on: ubuntu-latest
 
     steps:
@@ -36,7 +36,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.SSH_HOST}}
-          username: ${{secrets.SSH_USERNAME}}
+          username: ${{secrets.SSH_USER}}
           key: ${{secrets.SSH_KEY}}
           script: |
             pwd
