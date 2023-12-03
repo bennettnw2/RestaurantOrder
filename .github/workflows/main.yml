@@ -28,7 +28,7 @@ jobs:
         run: docker push "ghcr.io/${{secrets.GH_USER}}/api-server"
 
   deploy-api-server:
-    # needs: build-api-server
+    needs: build-api-server
     runs-on: ubuntu-latest
 
     steps:
@@ -38,6 +38,7 @@ jobs:
           host: ${{secrets.SSH_HOST}}
           username: ${{secrets.SSH_USER}}
           key: ${{secrets.SSH_KEY}}
+          passphrase: ${{secrets.SSH_PASSPHRASE}}
           script: |
             pwd
             ls -l
