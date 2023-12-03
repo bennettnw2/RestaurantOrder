@@ -42,6 +42,7 @@ jobs:
           username: ${{secrets.SSH_USER}}
           key: ${{secrets.SSH_KEY}}
           passphrase: ${{secrets.SSH_PASSPHRASE}}
+            # fix this so that it is just the dockerCompose file that gets copied
           source: "pipeline/dockerCompose.yml"
           target: "~/"
 
@@ -53,5 +54,6 @@ jobs:
           key: ${{secrets.SSH_KEY}}
           passphrase: ${{secrets.SSH_PASSPHRASE}}
           script: |
+            # will need to tweak these commands to clean up files when done too
             docker system prune -af
             docker compose -f dockerCompose.yml up -d
