@@ -53,5 +53,5 @@ jobs:
           key: ${{secrets.SSH_KEY}}
           passphrase: ${{secrets.SSH_PASSPHRASE}}
           script: |
-            pwd
-            ls -l
+            docker system prune -af
+            docker compose -f dockerCompose.yml up -d
