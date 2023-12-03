@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'Checkout Github Action'
+      - name: 'Checkout Github Repo'
         uses: actions/checkout@v3
 
       - name: 'Build API Server Container'
@@ -32,6 +32,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: 'Checkout Github Repo'
+        uses: actions/checkout@v3
+
       - name: 'Copy dockerCompose.yml to VM'
         uses: appleboy/scp-action@master
         with:
