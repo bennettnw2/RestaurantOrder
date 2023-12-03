@@ -32,6 +32,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: 'Copy dockerCompose.yml to VM'
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.SSH_USER}}
+          key: ${{secrets.SSH_KEY}}
+          passphrase: ${{secrets.SSH_PASSPHRASE}}
+          source: "pipeline/dockerCompose.yml"
+          target: "~/"
+
       - name: 'Deploy API Server Container'
         uses: appleboy/ssh-action@master
         with:
