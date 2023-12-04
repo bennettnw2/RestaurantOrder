@@ -55,5 +55,6 @@ jobs:
           passphrase: ${{secrets.SSH_PASSPHRASE}}
           script: |
             # will need to tweak these commands to clean up files when done too
+            docker stop $(docker ps -aq)
             docker system prune -af
-            docker compose -f dockerCompose.yml up -d
+            docker compose -e MONGO_URI=${{secrets.MONGO_URI}} -f dockerCompose.yml up -d
