@@ -60,7 +60,7 @@ jobs:
           key: ${{secrets.SSH_KEY}}
           passphrase: ${{secrets.SSH_PASSPHRASE}}
           script: |
-            # TODO: parameterize the container name
+            # TODO: parameterize the container name `restaurant_order`
             docker stop restaurant_order && docker rm restaurant_order
             docker system prune -af
             cd ~/pipeline
