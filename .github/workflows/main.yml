@@ -49,7 +49,7 @@ jobs:
           passphrase: ${{secrets.SSH_PASSPHRASE}}
             # fix this so that it is just the dockerCompose file that gets copied
           source: "pipeline/dockerCompose.yml,pipeline/.env"
-          target: "~/"
+          target: "~/pipeline"
 
       - name: 'Deploy API Server Container'
         uses: appleboy/ssh-action@master
@@ -62,4 +62,5 @@ jobs:
             # will need to tweak these commands to clean up files when done too
             # docker stop $(docker ps -aq)
             # docker system prune -af
+            cd ~/pipeline
             docker compose -f dockerCompose.yml up -d
