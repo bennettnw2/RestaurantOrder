@@ -65,4 +65,4 @@ jobs:
             docker system prune -af
             cd ~/pipeline
             docker compose -f dockerCompose.yml up -d
-            # rm -r ~/pipeline
+            rm -r ~/pipeline
