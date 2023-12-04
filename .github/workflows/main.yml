@@ -50,6 +50,7 @@ jobs:
             # fix this so that it is just the dockerCompose file that gets copied
           source: "pipeline/dockerCompose.yml,pipeline/.env"
           target: "~/pipeline"
+          strip_components: 1
 
       - name: 'Deploy API Server Container'
         uses: appleboy/ssh-action@master
