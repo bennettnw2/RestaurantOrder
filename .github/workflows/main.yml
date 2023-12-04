@@ -35,6 +35,11 @@ jobs:
       - name: 'Checkout Github Repo'
         uses: actions/checkout@v3
 
+      - name: 'Create `.env` File'
+        run: |
+          echo "Creating .env File"
+          echo "MONGO_URI=${{secrets.MONGO_URI}}" > pipeline/.env
+
       - name: 'Copy dockerCompose.yml to VM'
         uses: appleboy/scp-action@master
         with:
@@ -43,7 +48,7 @@ jobs:
           key: ${{secrets.SSH_KEY}}
           passphrase: ${{secrets.SSH_PASSPHRASE}}
             # fix this so that it is just the dockerCompose file that gets copied
-          source: "pipeline/dockerCompose.yml"
+          source: "pipeline/dockerCompose.yml,pipeline/.env"
           target: "~/"
 
       - name: 'Deploy API Server Container'
@@ -55,6 +60,6 @@ jobs:
           passphrase: ${{secrets.SSH_PASSPHRASE}}
           script: |
             # will need to tweak these commands to clean up files when done too
-            docker stop $(docker ps -aq)
-            docker system prune -af
-            docker compose -f dockerCompose.yml up -d -e MONGO_URI=${{secrets.MONGO_URI}}
+            # docker stop $(docker ps -aq)
+            # docker system prune -af
+            docker compose -f dockerCompose.yml up -d
