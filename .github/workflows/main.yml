@@ -60,8 +60,9 @@ jobs:
           key: ${{secrets.SSH_KEY}}
           passphrase: ${{secrets.SSH_PASSPHRASE}}
           script: |
-            # will need to tweak these commands to clean up files when done too
-            # docker stop $(docker ps -aq)
-            # docker system prune -af
+            # TODO: parameterize the container name
+            docker stop restaurant_order && docker rm restaurant_order
+            docker system prune -af
             cd ~/pipeline
             docker compose -f dockerCompose.yml up -d
+            # rm -r ~/pipeline
