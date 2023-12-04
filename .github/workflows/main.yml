@@ -40,14 +40,13 @@ jobs:
           echo "Creating .env File"
           echo "MONGO_URI=${{secrets.MONGO_URI}}" > pipeline/.env
 
-      - name: 'Copy dockerCompose.yml to VM'
+      - name: 'Copy dockerCompose and env Files to VM'
         uses: appleboy/scp-action@master
         with:
           host: ${{secrets.SSH_HOST}}
           username: ${{secrets.SSH_USER}}
           key: ${{secrets.SSH_KEY}}
           passphrase: ${{secrets.SSH_PASSPHRASE}}
-            # fix this so that it is just the dockerCompose file that gets copied
           source: "pipeline/dockerCompose.yml,pipeline/.env"
           target: "~/pipeline"
           strip_components: 1
