@@ -1,0 +1,67 @@
+name: Build and Deploy API to VM
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-api-server:
+    permissions: write-all
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout Github Repo'
+        uses: actions/checkout@v3
+
+      - name: 'Build API Server Container'
+        run: |
+          docker build -t "ghcr.io/${{secrets.GH_USER}}/api-server" \
+                       -f pipeline/Dockerfile-API .
+
+      - name: 'Login to GitHub Container Registry'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: 'Push API Server Container'
+        run: docker push "ghcr.io/${{secrets.GH_USER}}/api-server"
+
+  deploy-api-server:
+    needs: build-api-server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout Github Repo'
+        uses: actions/checkout@v3
+
+      - name: 'Create `.env` File'
+        run: |
+          echo "Creating .env File"
+          echo "MONGO_URI=${{secrets.MONGO_URI}}" > pipeline/.env
+
+      - name: 'Copy dockerCompose and env Files to VM'
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.SSH_USER}}
+          key: ${{secrets.SSH_KEY}}
+          passphrase: ${{secrets.SSH_PASSPHRASE}}
+          source: "pipeline/dockerCompose.yml,pipeline/.env"
+          target: "~/pipeline"
+          strip_components: 1
+
+      - name: 'Deploy API Server Container'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.SSH_USER}}
+          key: ${{secrets.SSH_KEY}}
+          passphrase: ${{secrets.SSH_PASSPHRASE}}
+          script: |
+            # TODO: parameterize the container name `restaurant_order`
+            docker stop restaurant_order && docker rm restaurant_order
+            docker system prune -af
+            cd ~/pipeline
+            docker compose -f dockerCompose.yml up -d
+            rm -r ~/pipeline

@@ -1,11 +1,10 @@
-name: Build and Deploy to VM
+name: Build and Deploy Frontend to VM
 
 on:
   workflow_dispatch:
 
 jobs:
-  build-api-server:
-    permissions: write-all
+  build-frontend:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,8 +13,8 @@ jobs:
 
       - name: 'Build API Server Container'
         run: |
-          docker build -t "ghcr.io/${{secrets.GH_USER}}/api-server" \
-                       -f pipeline/Dockerfile-API .
+          docker build -t "ghcr.io/${{secrets.GH_USER}}/frontend" \
+                       -f pipeline/Dockerfile-GUI .
 
       - name: 'Login to GitHub Container Registry'
         uses: docker/login-action@v1
@@ -25,20 +24,15 @@ jobs:
           password: ${{secrets.GITHUB_TOKEN}}
 
       - name: 'Push API Server Container'
-        run: docker push "ghcr.io/${{secrets.GH_USER}}/api-server"
+        run: docker push "ghcr.io/${{secrets.GH_USER}}/frontend"
 
-  deploy-api-server:
-    needs: build-api-server
+  deploy-frontend:
+    needs: build-frontend
     runs-on: ubuntu-latest
 
     steps:
       - name: 'Checkout Github Repo'
         uses: actions/checkout@v3
-
-      - name: 'Create `.env` File'
-        run: |
-          echo "Creating .env File"
-          echo "MONGO_URI=${{secrets.MONGO_URI}}" > pipeline/.env
 
       - name: 'Copy dockerCompose and env Files to VM'
         uses: appleboy/scp-action@master
@@ -47,7 +41,7 @@ jobs:
           username: ${{secrets.SSH_USER}}
           key: ${{secrets.SSH_KEY}}
           passphrase: ${{secrets.SSH_PASSPHRASE}}
-          source: "pipeline/dockerCompose.yml,pipeline/.env"
+          source: "pipeline/dockerComposeFrontend.yml"
           target: "~/pipeline"
           strip_components: 1
 
@@ -59,9 +53,9 @@ jobs:
           key: ${{secrets.SSH_KEY}}
           passphrase: ${{secrets.SSH_PASSPHRASE}}
           script: |
-            # TODO: parameterize the container name `restaurant_order`
-            docker stop restaurant_order && docker rm restaurant_order
+            # TODO: parameterize the container name `frontend`
+            docker stop frontend && docker rm frontend
             docker system prune -af
             cd ~/pipeline
-            docker compose -f dockerCompose.yml up -d
+            docker compose -f dockerComposeFrontend.yml up -d
             rm -r ~/pipeline
