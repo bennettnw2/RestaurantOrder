@@ -1,0 +1,14 @@
+FROM node:lts-apline3.19
+
+WORKDIR /app/server
+
+COPY frontend/package.json ./package.json
+COPY frontend/package-lock.json ./package-lock.json
+
+RUN npm ci
+
+CMD ls
+
+EXPOSE 3000 
+
+CMD npm start
