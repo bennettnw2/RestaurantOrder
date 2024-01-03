@@ -4,8 +4,12 @@ WORKDIR /app/server
 
 COPY frontend/package.json ./package.json
 COPY frontend/package-lock.json ./package-lock.json
+CMD ls
 
-RUN npm ci
+RUN npm install 
+COPY . ./
+CMD ls
+RUN npm run build
 
 CMD ls
 
