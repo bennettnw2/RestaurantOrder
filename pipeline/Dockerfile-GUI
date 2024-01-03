@@ -9,6 +9,7 @@ RUN ls
 RUN npm install 
 COPY . ./
 RUN ls
+WORKDIR /app/server/frontend
 RUN npm run build
 
 RUN ls
