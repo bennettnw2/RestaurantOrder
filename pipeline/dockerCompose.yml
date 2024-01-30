@@ -2,6 +2,7 @@ services:
   api-server:
     container_name: restaurant_order
     image: ghcr.io/bennettnw2/api-server:latest
+    restart: always
     ports:
       - 8080:8080
     environment:
