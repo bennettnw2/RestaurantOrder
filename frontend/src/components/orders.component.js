@@ -99,7 +99,7 @@ const Orders = () => {
 	//changes the waiter
 	function changeWaiterForOrder(){
 			changeWaiter.change = false
-			var url = "http://172.104.5.228:8080/waiter/update/" + changeWaiter.id
+			var url = "http://172.104.5.228:8081/waiter/update/" + changeWaiter.id
 			axios.put(url, {
 					"server": newWaiterName
 			}).then(response => {
@@ -112,7 +112,7 @@ const Orders = () => {
 	//changes the order
 	function changeSingleOrder(){
 			changeOrder.change = false;
-			var url = "http://172.104.5.228:8080/order/update/" + changeOrder.id
+			var url = "http://172.104.5.228:8081/order/update/" + changeOrder.id
 			axios.put(url, newOrder)
 					.then(response => {
 					if(response.status == 200){
@@ -123,7 +123,7 @@ const Orders = () => {
 	//creates a new order
 	function addSingleOrder(){
 			setAddNewOrder(false)
-			var url = "http://172.104.5.228:8080/order/create"
+			var url = "http://172.104.5.228:8081/order/create"
 			axios.post(url, {
 					"server": newOrder.server,
 					"dish": newOrder.dish,
@@ -137,7 +137,7 @@ const Orders = () => {
 	}
 	//gets all the orders
 	function getAllOrders(){
-			var url = "http://172.104.5.228:8080/orders"
+			var url = "http://172.104.5.228:8081/orders"
 			axios.get(url, {
 					responseType: 'json'
 			}).then(response => {
@@ -148,7 +148,7 @@ const Orders = () => {
 	}
 	//deletes a single order
 	function deleteSingleOrder(id){
-			var url = "http://172.104.5.228:8080/order/delete/" + id
+			var url = "http://172.104.5.228:8081/order/delete/" + id
 			axios.delete(url, {
 			}).then(response => {
 					if(response.status == 200){
