@@ -15,7 +15,7 @@ jobs:
       - name: 'Build API Server Container'
         run: |
           docker build -t "ghcr.io/${{secrets.GH_USER}}/api-server" \
-                       -f pipeline/Dockerfile-API .
+                       -f pipeline/Dockerfile-api .
 
       - name: 'Login to GitHub Container Registry'
         uses: docker/login-action@v1

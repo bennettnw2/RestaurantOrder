@@ -2,14 +2,14 @@ FROM node:lts-alpine3.19
 
 WORKDIR /app/server
 
-COPY frontend/package.json ./package.json
-COPY frontend/package-lock.json ./package-lock.json
+COPY ui/package.json ./package.json
+COPY ui/package-lock.json ./package-lock.json
 RUN ls
 
 RUN npm install 
 COPY . ./
 RUN ls
-WORKDIR /app/server/frontend
+WORKDIR /app/server/ui
 RUN npm run build
 
 RUN ls
